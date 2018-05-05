@@ -1,21 +1,15 @@
-const { redditGoals } = require ('./config');
-const snoowrap = require('snoowrap');
+const {
+  extractMediaFromHot,
+  extractGoalsFromMedia,
+} = require('./redditParser');
 
-var { clientId, clientSecret, refresh_token: refreshToken } = redditGoals;
+extractMediaFromHot()
+  .then((mediaArray) => {
+    mediaArray.forEach(media => console.log(media.title));
+    console.log('\n End of media \n');
+    return mediaArray;
+  })
+  .then(extractGoalsFromMedia)
+  .forEach(goal => console.log(goal.title));
 
-const r = new snoowrap({
-  userAgent: 'reddit-goals',
-  clientId,
-  clientSecret,
-  refreshToken
-});
-
-r.getHot().map(post => post.title).then(console.log);
-
-// Get posts from /r/soccer
-
-r.getSubreddit('soccer')
- .getHot()
- .map(post => post.title + ' ' + post.ups)
- .then(console.log);
-
+// r.getHot().map(post => post.title).then(console.log);
