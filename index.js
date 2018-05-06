@@ -1,7 +1,10 @@
 const {
   extractMediaFromHot,
   extractGoalsFromMedia,
+  extractURLfromHTML,
 } = require('./redditParser');
+
+const results = [];
 
 extractMediaFromHot()
   .then((mediaArray) => {
@@ -10,6 +13,12 @@ extractMediaFromHot()
     return mediaArray;
   })
   .then(extractGoalsFromMedia)
-  .forEach(goal => console.log(goal.title));
-
-// r.getHot().map(post => post.title).then(console.log);
+  .forEach((currGoal) => {
+    if (Object.prototype.hasOwnProperty.call(currGoal, 'html')) {
+      results.push({
+        ...currGoal,
+        url: extractURLfromHTML(currGoal.html),
+      });
+    } else results.push(currGoal);
+  })
+  .then(() => console.log(results));
